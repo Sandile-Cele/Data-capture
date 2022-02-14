@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Data_capture.Models;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace Data_capture.Controllers
 {
     public class MeasurementMetaDatumsController : Controller
     {
+        DateTime localDate = DateTime.Now;
+
         private readonly DataCaptureContext _context;
 
         public MeasurementMetaDatumsController(DataCaptureContext context)
@@ -81,13 +85,10 @@ namespace Data_capture.Controllers
             {
                 return NotFound();
             }
-            ViewData["MId"] = new SelectList(_context.Measurements, "MId", "UserId", measurementMetaDatum.MId);
+            //ViewData["MId"] = new SelectList(_context.Measurements, "MId", "UserId", measurementMetaDatum.MId);
             return View(measurementMetaDatum);
         }
 
-        // POST: MeasurementMetaDatums/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MmdId,MId,MmdTimeStamp,MmdStatus")] MeasurementMetaDatum measurementMetaDatum)
@@ -97,27 +98,33 @@ namespace Data_capture.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //Is user signed in?
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("currentClientId")))
             {
-                try
-                {
-                    _context.Update(measurementMetaDatum);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MeasurementMetaDatumExists(measurementMetaDatum.MmdId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("login", "AspNetUsers");
             }
-            ViewData["MId"] = new SelectList(_context.Measurements, "MId", "UserId", measurementMetaDatum.MId);
+
+            try
+            {
+#warning Failed to convert localDate to MmdTimeStamp
+                measurementMetaDatum.MmdTimeStamp = Encoding.ASCII.GetBytes(localDate.ToString());
+
+                _context.Update(measurementMetaDatum);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MeasurementMetaDatumExists(measurementMetaDatum.MmdId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
             return View(measurementMetaDatum);
         }
 

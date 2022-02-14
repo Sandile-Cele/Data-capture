@@ -74,7 +74,10 @@ namespace Data_capture.Controllers
             {
                 _context.Add(measurement);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //User to complete metadata
+
+                return RedirectToAction("create", "MeasurementMetaDatums");
 
             }
             catch (Exception)

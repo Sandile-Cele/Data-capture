@@ -28,10 +28,14 @@ namespace Data_capture
             {
 
                 aspNetUser.Id = new CustomRandom().get36();
+                aspNetUser.PasswordHash = new Security().ComputeSha256Hash(aspNetUser.PasswordHash);
 
                 _context.Add(aspNetUser);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                HttpContext.Session.SetString("currentClientId", aspNetUser.Id);//storing PK of user
+
+                return RedirectToAction("index", "measurements");
             }
             return View(aspNetUser);
         }
@@ -51,7 +55,7 @@ namespace Data_capture
                 string tempHash = new Security().ComputeSha256Hash(aspNetUser.PasswordHash);
 
                 AspNetUser getUser = await _context.AspNetUsers
-                       .FirstOrDefaultAsync(m => m.UserName.Equals(aspNetUser.UserName) & m.PasswordHash.Equals(aspNetUser.PasswordHash));
+                       .FirstOrDefaultAsync(m => m.UserName.Equals(aspNetUser.UserName) & m.PasswordHash.Equals(tempHash));
 
                 if (getUser == null)
                 {
