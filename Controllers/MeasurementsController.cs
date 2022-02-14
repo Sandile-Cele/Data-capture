@@ -25,10 +25,35 @@ namespace Data_capture.Controllers
             ViewBag.currentUserId = HttpContext.Session.GetString("currentClientId");
 
             var dataCaptureContext = _context.Measurements.Include(m => m.Ec).Include(m => m.User);
-            return View(await dataCaptureContext.ToListAsync());
+            List<Measurement> tempDataCaptureContext = await dataCaptureContext.ToListAsync();
+
+            //Not the best way to display the stats
+            ViewBag.getTemperature = "Highest[" + CusMath.getHighest(CusMath.getCalculatedSingleList(tempDataCaptureContext)[0].ToArray())+"]";
+            /*How it works?
+             * 1 Send DataCaptureContext(which has all data for every user) to getCalculatedSingleList()
+             * 2 getCalculatedSingleList() will turn ALL the data types (e.g temperature entries) into decimal[]
+             * 2.2 getCalculatedSingleList() returns multiples lists including temperature, width etc.
+             * 2.2 I.E if I want all depth as decimal[] I will request for 5th array: getCalculatedSingleList( DataCaptureContext  )[5]
+             * 2.2.2 for temperature i will request for the 1st array i.e: getCalculatedSingleList(DataCaptureContext)[ 1 ]
+             * 3 getHighest() is simply expecting a decimal[] which I have from above
+             */
+
+
+            ViewBag.Humidity = "lowest ["+ CusMath.getLowest(CusMath.getCalculatedSingleList(tempDataCaptureContext)[1].ToArray()) + "]";
+            ViewBag.Weight = "Variance ["+ CusMath.getHighest(CusMath.getCalculatedSingleList(tempDataCaptureContext)[2].ToArray()) + "]";
+            ViewBag.Width = "Mean ["+ CusMath.getMean(CusMath.getCalculatedSingleList(tempDataCaptureContext)[3].ToArray()) + "]";
+            ViewBag.Length = "sum ["+ CusMath.getSum(CusMath.getCalculatedSingleList(tempDataCaptureContext)[4].ToArray()) + "]";
+            ViewBag.Dept = "Standard deviation [" + CusMath.getStandardDeviation(CusMath.getCalculatedSingleList(tempDataCaptureContext)[5].ToArray()) + "]";
+
+            return View(tempDataCaptureContext);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        //public async Task<IActionResult> Index()
+        //{ 
+        
+        //}
+
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
