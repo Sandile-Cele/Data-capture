@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Data_capture.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Data_capture.Controllers
 {
@@ -47,7 +48,6 @@ namespace Data_capture.Controllers
         // GET: EntryCategories/Create
         public IActionResult Create2()
         {
-            //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
