@@ -7500,11 +7500,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Sandi\\source\\repos\\Data-capture\\Data-capture.csproj",
+      "projectUniqueName": "C:\\Cave\\repos\\Data-capture\\Data-capture.csproj",
       "projectName": "Data-capture",
-      "projectPath": "C:\\Users\\Sandi\\source\\repos\\Data-capture\\Data-capture.csproj",
+      "projectPath": "C:\\Cave\\repos\\Data-capture\\Data-capture.csproj",
       "packagesPath": "C:\\Users\\Sandi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Sandi\\source\\repos\\Data-capture\\obj\\",
+      "outputPath": "C:\\Cave\\repos\\Data-capture\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Sandi\\AppData\\Roaming\\NuGet\\NuGet.Config",

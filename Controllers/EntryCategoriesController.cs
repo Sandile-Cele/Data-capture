@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Data_capture.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace Data_capture.Controllers
 {
@@ -20,7 +19,7 @@ namespace Data_capture.Controllers
         }
 
         // GET: EntryCategories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index2()
         {
             var dataCaptureContext = _context.EntryCategories.Include(e => e.User);
             return View(await dataCaptureContext.ToListAsync());
@@ -46,9 +45,9 @@ namespace Data_capture.Controllers
         }
 
         // GET: EntryCategories/Create
-        public IActionResult Create()
+        public IActionResult Create2()
         {
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
@@ -57,18 +56,10 @@ namespace Data_capture.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EcId,UserId,EcName")] EntryCategory entryCategory)
+        public async Task<IActionResult> Create2([Bind("EcId,UserId,EcName")] EntryCategory entryCategory)
         {
             if (ModelState.IsValid)
             {
-                //If user is not logged in, send to login page
-                if(HttpContext.Session.GetString("currentClientId") == null)
-                {
-                    return RedirectToAction("login", "aspnetusers");
-                }
-
-                entryCategory.UserId = HttpContext.Session.GetString("currentClientId");
-
                 _context.Add(entryCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
