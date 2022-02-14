@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Data_capture.Models;
 using Microsoft.AspNetCore.Http;
+using Data_capture.DataCapture_helper;
 
 namespace Data_capture.Controllers
 {
@@ -20,7 +21,7 @@ namespace Data_capture.Controllers
         }
 
         // GET: EntryCategories
-        public async Task<IActionResult> Index2()
+        public async Task<IActionResult> Index()
         {
             var dataCaptureContext = _context.EntryCategories.Include(e => e.User);
             return View(await dataCaptureContext.ToListAsync());
@@ -46,7 +47,7 @@ namespace Data_capture.Controllers
         }
 
         // GET: EntryCategories/Create
-        public IActionResult Create2()
+        public IActionResult Create()
         {
             return View();
         }
@@ -56,16 +57,24 @@ namespace Data_capture.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create2([Bind("EcId,UserId,EcName")] EntryCategory entryCategory)
+        public async Task<IActionResult> Create([Bind("ecId,userId,EcName")] EntryCategory entryCategory)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(entryCategory.EcName))
             {
-                _context.Add(entryCategory);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(entryCategory);
             }
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", entryCategory.UserId);
-            return View(entryCategory);
+
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("currentClientId")))
+            {
+                return RedirectToAction("login", "AspNetUsers");
+            }
+
+            entryCategory.UserId = HttpContext.Session.GetString("currentClientId");
+
+            _context.Add(entryCategory);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+
         }
 
         // GET: EntryCategories/Edit/5
@@ -86,7 +95,7 @@ namespace Data_capture.Controllers
         }
 
         // POST: EntryCategories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // To protect from over posting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

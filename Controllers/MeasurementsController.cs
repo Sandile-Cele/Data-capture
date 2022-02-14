@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Data_capture.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Data_capture.Controllers
 {
@@ -18,14 +19,15 @@ namespace Data_capture.Controllers
             _context = context;
         }
 
-        // GET: Measurements
         public async Task<IActionResult> Index()
         {
+            //Only user who created can edit
+            ViewBag.currentUserId = HttpContext.Session.GetString("currentClientId");
+
             var dataCaptureContext = _context.Measurements.Include(m => m.Ec).Include(m => m.User);
             return View(await dataCaptureContext.ToListAsync());
         }
 
-        // GET: Measurements/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,33 +47,44 @@ namespace Data_capture.Controllers
             return View(measurement);
         }
 
-        // GET: Measurements/Create
         public IActionResult Create()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("currentClientId")))
+            {
+                return RedirectToAction("login", "AspNetUsers");
+            }
+
             ViewData["EcId"] = new SelectList(_context.EntryCategories, "EcId", "EcName");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
-        // POST: Measurements/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MId,UserId,EcId,MTemperature,MHumidity,MWeight,MWidth,MLength,MDepth")] Measurement measurement)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("currentClientId")))
+            {
+                return RedirectToAction("login", "AspNetUsers");
+            }
+
+            measurement.UserId = HttpContext.Session.GetString("currentClientId");
+
+            try
             {
                 _context.Add(measurement);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
             }
-            ViewData["EcId"] = new SelectList(_context.EntryCategories, "EcId", "EcName", measurement.EcId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", measurement.UserId);
-            return View(measurement);
+            catch (Exception)
+            {
+                ViewData["EcId"] = new SelectList(_context.EntryCategories, "EcId", "EcName", measurement.EcId);
+
+                return View(measurement);
+            }
         }
 
-        // GET: Measurements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,19 +92,28 @@ namespace Data_capture.Controllers
                 return NotFound();
             }
 
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("currentClientId")))
+            {
+                return RedirectToAction("login", "AspNetUsers");
+            }
+
             var measurement = await _context.Measurements.FindAsync(id);
             if (measurement == null)
             {
                 return NotFound();
             }
+
+            //If this is NOT the user who created this entry, then send to login!
+            if (!measurement.UserId.Equals(HttpContext.Session.GetString("currentClientId")))
+            {
+                return RedirectToAction("login", "AspNetUsers");
+            }
+
             ViewData["EcId"] = new SelectList(_context.EntryCategories, "EcId", "EcName", measurement.EcId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", measurement.UserId);
             return View(measurement);
         }
 
-        // POST: Measurements/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MId,UserId,EcId,MTemperature,MHumidity,MWeight,MWidth,MLength,MDepth")] Measurement measurement)
@@ -126,7 +148,6 @@ namespace Data_capture.Controllers
             return View(measurement);
         }
 
-        // GET: Measurements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,7 +167,6 @@ namespace Data_capture.Controllers
             return View(measurement);
         }
 
-        // POST: Measurements/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

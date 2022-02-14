@@ -61,7 +61,7 @@ namespace Data_capture
 
                 HttpContext.Session.SetString("currentClientId", getUser.Id);//storing PK of user
                 
-                return RedirectToAction("index", "Home");
+                return RedirectToAction("index", "measurements");
             }
 
             return View();

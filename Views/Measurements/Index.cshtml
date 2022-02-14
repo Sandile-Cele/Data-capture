@@ -13,28 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MTemperature)
+                Temperature
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MHumidity)
+                Humidity
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MWeight)
+                Weight
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MWidth)
+                Width
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MLength)
+                Length
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MDepth)
+                Dept
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ec)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
+                Category
             </th>
             <th></th>
         </tr>
@@ -64,10 +61,11 @@
                 @Html.DisplayFor(modelItem => item.Ec.EcName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MId">Edit</a> |
+                @if(ViewBag.currentUserId == item.UserId)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.MId">Edit</a>
+                }
+
                 <a asp-action="Details" asp-route-id="@item.MId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.MId">Delete</a>
             </td>
