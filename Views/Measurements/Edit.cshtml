@@ -1,0 +1,69 @@
+﻿@model Data_capture.Models.Measurement
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Measurement</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MId" />
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EcId" class="control-label"></label>
+                <select asp-for="EcId" class="form-control" asp-items="ViewBag.EcId"></select>
+                <span asp-validation-for="EcId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MTemperature" class="control-label"></label>
+                <input asp-for="MTemperature" class="form-control" />
+                <span asp-validation-for="MTemperature" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MHumidity" class="control-label"></label>
+                <input asp-for="MHumidity" class="form-control" />
+                <span asp-validation-for="MHumidity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MWeight" class="control-label"></label>
+                <input asp-for="MWeight" class="form-control" />
+                <span asp-validation-for="MWeight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MWidth" class="control-label"></label>
+                <input asp-for="MWidth" class="form-control" />
+                <span asp-validation-for="MWidth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MLength" class="control-label"></label>
+                <input asp-for="MLength" class="form-control" />
+                <span asp-validation-for="MLength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MDepth" class="control-label"></label>
+                <input asp-for="MDepth" class="form-control" />
+                <span asp-validation-for="MDepth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Data_capture.Models.Measurement>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MTemperature)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MHumidity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MWeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MWidth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MLength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MDepth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ec)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MTemperature)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MHumidity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MWidth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MDepth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ec.EcName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

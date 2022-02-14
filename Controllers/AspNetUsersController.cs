@@ -79,7 +79,7 @@ namespace Data_capture
 
             if (id == null)
             {
-                return RedirectToAction("details");
+                return RedirectToAction("login");
             }
 
             var aspNetUser = await _context.AspNetUsers

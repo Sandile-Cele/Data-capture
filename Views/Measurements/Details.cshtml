@@ -1,0 +1,66 @@
+﻿@model Data_capture.Models.Measurement
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Measurement</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MTemperature)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MTemperature)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MHumidity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MHumidity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MWeight)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MWeight)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidth)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MWidth)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MLength)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MLength)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MDepth)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MDepth)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ec)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ec.EcName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.User.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
